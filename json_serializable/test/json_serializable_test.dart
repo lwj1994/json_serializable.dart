@@ -12,6 +12,18 @@ import 'package:test/test.dart';
 
 Future<void> main() async {
   initializeBuildLogTracking();
+  final a = await initializeLibraryReaderForDirectory(
+    p.join('test', 'src'),
+    '_json_test.dart',
+  );
+
+  testAnnotatedElements(
+    a,
+    JsonSerializableGenerator(),
+    expectedAnnotatedTests: {"GeneralTestClass3"},
+  );
+  return;
+
   final jsonSerializableTestReader = await initializeLibraryReaderForDirectory(
     p.join('test', 'src'),
     '_json_serializable_test_input.dart',

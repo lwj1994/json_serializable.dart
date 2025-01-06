@@ -240,13 +240,28 @@ String? defaultDecodeLogic(
   } else if (targetType.isDartCoreDouble) {
     final targetTypeNullable = defaultProvided || targetType.isNullableType;
     final question = targetTypeNullable ? '?' : '';
-    return '($expression as num$question)$question.toDouble()';
+    //return '($expression as num$question)$question.toDouble()';
+    if (question.isEmpty) {
+      return 'double.tryParse(($expression).toString()) ?? 0';
+    } else {
+      return 'double.tryParse(($expression)?.toString() ?? "")';
+    }
   } else if (targetType.isDartCoreInt) {
     final targetTypeNullable = defaultProvided || targetType.isNullableType;
     final question = targetTypeNullable ? '?' : '';
-    return '($expression as num$question)$question.toInt()';
+    //return '($expression as num$question)$question.toInt()';
+    if (question.isEmpty) {
+      return 'int.tryParse(($expression).toString()) ?? 0';
+    } else {
+      return 'int.tryParse(($expression)?.toString() ?? "")';
+    }
   } else if (simpleJsonTypeChecker.isAssignableFromType(targetType)) {
     final typeCode = typeToCode(targetType, forceNullable: defaultProvided);
+    if (typeCode == 'String') {
+      return '($expression).toString()';
+    } else if (typeCode == 'String?') {
+      return '($expression)?.toString()';
+    }
     return '$expression as $typeCode';
   }
 
